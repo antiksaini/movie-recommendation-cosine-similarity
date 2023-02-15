@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>movie recommendation</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'><link rel="stylesheet" href="./style.css">
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+  <script src="./fetch.js"></script>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="py-5 text-center">
+        <!--img class="d-block mx-auto mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"-->
+        <h3>Movie Recommendation - Cosine Similarity</h3>
+      </div>
+<div id="search-form">
+  <input placeholder="type movie.." id="textfield" class="form-control" type="text" />
+  <button class="btn btn-success" onclick="update()">Search</button>
+</div>
+<div style="display: none;" id="search-result" />
+<!-- partial -->
+
+
+
+
+<div id="menu-main" class="list-item">
+	<div><strong>Title</strong></div>
+	<div><strong>Director</strong></div>
+	<div><strong>Rating</strong></div>
+</div>
+
+</div>
+
+
+</body>
+</html>
+<script type="text/javascript">
+	function update() {
+
+
+
+
+	var searchTerm = document.getElementById('textfield').value;
+	console.log(searchTerm);
+	const elements = document.getElementsByClassName('movie');
+    while(elements.length > 0){
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+
+	$.ajax({
+			  url: "/get?title=" + searchTerm,
+			  type: "GET",
+			  success: function (data) {
+			  	var x = document.getElementById("search-result");
+				  if (x.style.display === "none") {
+				    x.style.display = "block";
+				  }
+			  	console.log(data);
+			    for (let i = 0; i < data.items.length; i++) {
+			        const div = document.createElement('div');
+
+					//.className = 'row';
+					div.innerHTML = `
+					<div onclick="location.href='`+ data.items[i].link +`';" style="cursor: pointer;"  class="list-item movie">
+						<div>`+ data.items[i].title +`</div>
+						<div>`+ data.items[i].director +`</div>
+						<div>`+ data.items[i].rating +`</div>
+					</div>
+					`;
+					document.getElementById('search-result').appendChild(div);
+				}
+			  },
+			    error: function(XMLHttpRequest, textStatus, errorThrown) {
+			        alert("Sorry couldn't find any move " + textStatus);
+			    }
+			});
+}
+</script>
+<style type="text/css">
+	body, #search-form, #search-result, .list-item, .list-item > div {
+  display: flex;
+}
+
+body, #search-form {
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  flex-direction: column;
+}
+body #search-form {
+  height: 30vh;
+}
+body #search-form button {
+  margin-left: 2px;
+}
+body #search-form input {
+  width: 60%;
+  max-width: 700px;
+  min-width: 280px;
+}
+body #search-form button, body #search-form input {
+  height: 40px;
+}
+body #search-result {
+  height: 75vh;
+  flex-direction: column;
+}
+body #search-result .list-item {
+  padding: 5px 0;
+  min-height: 40px;
+  min-width: 1200px;
+  max-width: 700px;
+  border-bottom: 1px solid lightgrey;
+  justify-content: space-between;
+}
+body #search-result .list-item:first-child {
+  font-weight: 700;
+}
+body #search-result .list-item div {
+  white-space: nowrap;
+  align-items: center;
+}
+body #search-result .list-item div:first-child {
+  width: 75%;
+}
+body #search-result .list-item div:nth-child(2) {
+  width: 80%;
+}
+body #search-result .list-item div:last-child {
+  width: 25%;
+  justify-content: flex-end;
+}
+
+@media (max-width: 580px) {
+  #search-form, #search-result {
+    width: 90%;
+  }
+}
+</style>
