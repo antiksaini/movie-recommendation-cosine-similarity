@@ -1,7 +1,8 @@
 
 # Movie Recommendation
 
-a simple Movie Recommendation using Cosine Similarity and small dataset.
+V1 - A simple Movie Recommendation using Cosine Similarity and small dataset.
+V2 - Matrix factorization
 
 
 
